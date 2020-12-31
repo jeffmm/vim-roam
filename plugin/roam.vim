@@ -7,6 +7,10 @@ if exists("g:loaded_roam") || &compatible
 endif
 let g:loaded_roam = 1
 
+if !exists("g:roam_default_mappings")
+  let g:roam_default_mappings = 1
+endif
+
 " Get the directory the script is installed in
 let s:plugin_dir = expand('<sfile>:p:h:h')
 
