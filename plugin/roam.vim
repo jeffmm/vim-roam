@@ -26,41 +26,43 @@ function! s:get_default(val)
 endfunction
 
 " Search note tags, which is any word surrounded by colons (vimwiki style tags)
-command! -nargs=* -bang RoamTags 
+command! -bang RoamTags 
       \ call roam#fzf#rg_text(<bang>0, ':[a-zA-Z0-9]+:', s:get_default('path'))
-nnoremap <silent><script><buffer> <Plug>RoamTags :RoamTags<CR>
+nnoremap <silent><script> <Plug>RoamTags :RoamTags<CR>
 
 " Search for text in wiki files
-command! -nargs=* -bang RoamText 
+command! -bang RoamText 
       \ call roam#fzf#rg_text(<bang>0, '[a-zA-Z0-9]+', fnameescape(s:get_default('path')))
-nnoremap <silent><script><buffer> <Plug>RoamText :RoamText<CR>
+nnoremap <silent><script> <Plug>RoamText :RoamText<CR>
 
 " Search for filenames in wiki
-command! -nargs=* -bang RoamFiles 
+command! -bang RoamFiles 
       \ call roam#fzf#rg_files(<bang>0, s:get_default('path'), 
       \ "*" . s:get_default('ext'))
-nnoremap <silent><script><buffer> <Plug>RoamFiles :RoamFiles<CR>
+nnoremap <silent><script> <Plug>RoamFiles :RoamFiles<CR>
 
 " Create a new note
-command! -nargs=* -bang RoamNewNote call roam#vimwiki#roam_new_note()
-nnoremap <silent><script><buffer> <Plug>RoamNewNote :RoamNewNote<CR>
+command! RoamNewNote call roam#vimwiki#roam_new_note()
+nnoremap <silent><script> <Plug>RoamNewNote :RoamNewNote<CR>
 "
 " List unlinked notes and broken links
-" TODO: simply uses vimwiki's check_links function for now
-command! -nargs=* -bang RoamInbox call vimwiki#base#check_links()
-nnoremap <silent><script><buffer> <Plug>RoamInbox :RoamInbox<CR>
+" TODO: simply uses vimwiki#base#check_links function for now
+command! RoamInbox execute "VimwikiCheckLinks"
+nnoremap <silent><script> <Plug>RoamInbox :RoamInbox<CR>
 
+function! s:map_roam_key(mode, keymap, command)
+    execute a:mode . 'map ' . a:keymap . ' ' . a:command
+endfunction
 
-"
 " Set default global key mappings
 if g:roam_default_mappings == 1
-  " Get the user defined prefix for vimwikiwiki (default <leader>w)
+  " Get the user defined prefix for vimwiki commands (default <leader>w)
   let s:map_prefix = vimwiki#vars#get_global('map_prefix')
-  call vimwiki#u#map_key('n', s:map_prefix . 's', '<Plug>RoamText', 2)
-  call vimwiki#u#map_key('n', s:map_prefix . 't', '<Plug>RoamTags', 2)
-  call vimwiki#u#map_key('n', s:map_prefix . 'f', '<Plug>RoamFiles', 2)
-  call vimwiki#u#map_key('n', s:map_prefix . 'n', '<Plug>RoamNewNote', 2)
-  call vimwiki#u#map_key('n', s:map_prefix . 'i', '<Plug>RoamInbox', 2)
+  call s:map_roam_key('n', s:map_prefix . 's', '<Plug>RoamText')
+  call s:map_roam_key('n', s:map_prefix . 't', '<Plug>RoamTags')
+  call s:map_roam_key('n', s:map_prefix . 'f', '<Plug>RoamFiles')
+  call s:map_roam_key('n', s:map_prefix . 'n', '<Plug>RoamNewNote')
+  call s:map_roam_key('n', s:map_prefix . 'i', '<Plug>RoamInbox')
 endif
 
 let &cpoptions = s:old_cpo
