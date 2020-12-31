@@ -97,6 +97,12 @@ if !exists('g:roam_backlinks_title')
   let g:roam_backlinks_title = "Backlinks"
 endif
 
+if exists("g:roam_title_format")
+  let s:roam_format = g:roam_title_format
+else
+  let s:roam_format = fnamemodify("%title", ":r")
+endif
+
 " default title used for %title placeholder in g:roam_format if the title is
 " empty
 if !exists('g:roam_default_title')
@@ -122,10 +128,11 @@ function! roam#vimwiki#find_header_end(filename)
   " Markdown and vimwiki use different formats for metadata header, select the
   " right one according to the file type
   let ext = fnamemodify(a:filename, ":e")
-  let header_test = function(ext ==? 'md' ? '<sid>test_header_end_md' : '<sid>test_header_end_wiki')
+  " Funcref variable must start with a capital
+  let HeaderTest = function(ext ==? 'md' ? '<sid>test_header_end_md' : '<sid>test_header_end_wiki')
   let i = 0
   for line in lines
-    let res = header_test(line, i)
+    let res = HeaderTest(line, i)
     if res > -1 
       return i
     endif
@@ -219,7 +226,7 @@ function! roam#vimwiki#next_counted_file()
 endfunction
 
 function! roam#vimwiki#new_roam_name(...)
-  let newformat = g:roam_format
+  let newformat = "%title"
   if a:0 > 0 && a:1 != "" 
     " title contains safe version of the original title
     " raw_title is exact title
@@ -229,8 +236,8 @@ function! roam#vimwiki#new_roam_name(...)
     let title = roam#vimwiki#escape_filename(g:roam_default_title)
     let raw_title = g:roam_default_title
   endif
-  " expand title in the roam_format
-  let newformat = substitute(g:roam_format, "%title", title, "")
+  " expand title in s:roam_format
+  let newformat = substitute(s:roam_format, "%title", title, "")
   let newformat = substitute(newformat, "%raw_title", raw_title, "")
   if matchstr(newformat, "%file_no") != ""
     " file_no counts files in the current wiki and adds 1

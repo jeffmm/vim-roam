@@ -41,11 +41,11 @@ endif
 " Function for overriding the default vimwiki link handler:
 " generates a new Roam-style note from link
 function! VimwikiLinkHandler(link)
-  let link_info = vimwiki#base#resolve_link(lnk)
+  let link_info = vimwiki#base#resolve_link(a:link)
   " First check that the scheme is an inter-wiki file
   if link_info.scheme ==# 'wiki0'
       if empty(glob(link_info.filename)) 
-          let title = fnamemodify(lnk, ":r")
+          let title = fnamemodify(a:link, ":r")
           let name = roam#vimwiki#new_roam_name(title)
           " prepare_template_variables needs the file saved on disk
           execute "w"
