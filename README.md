@@ -1,8 +1,8 @@
-# `roam.vim`: A Vim-Powered and Roam-Inspired Wiki
+# roam.vim: A Vim-Powered and Roam-Inspired Wiki
 
 - [Intro](#introduction)
 - [Installation](#installation)
-- [Using `roam.vim`](#using-roam-vim)
+- [Using roam.vim](#using-roam.vim)
   - [Documentation](#documentation)
   - [Key Bindings](#key-bindings)
 - [Reporting issues](#reporting-issues)
@@ -18,9 +18,16 @@ I wanted to build a Roam-like wiki of my own using the tool with which I am most
 
 ## Installation
 
-`roam.vim` has been tested on **NeoVim >= 0.4.4**, though it will likely work on recent versions of both Vim and NeoVim.
+### Requirements
 
-If you're not using NeoVim, make sure to add the following to your vimrc, otherwise `roam.vim` will not work:
+- [vimwiki plugin](https://github.com/vimwiki/vimwiki)
+- [fzf.vim plugin](https://github.com/junegunn/fzf.vim)
+- [ripgrep](https://github.com/BurntSushi/ripgrep)
+- ImageMagick (optional)
+
+roam.vim has been tested on **NeoVim >= 0.4.4**, though it will likely work on recent versions of both Vim and NeoVim.
+
+If you're not using NeoVim, make sure to add the following to your vimrc, otherwise roam.vim will not work:
 
 ```vim
 set nocompatible
@@ -28,7 +35,7 @@ filetype plugin on
 syntax on
 ```
 
-This plugin is built on top of the [VimWiki](https://github.com/vimwiki/vimwiki) plugin, and makes heavy use of [fzf.vim](https://github.com/junegunn/fzf.vim). You will also need to install `ripgrep` and `ImageMagick` to make use of all of `roam.vim`'s features. I also recommend the [markdown-preview](https://github.com/iamcco/markdown-preview.nvim) plugin to easily view your notes in HTML, rendered in real time.
+This plugin is built on top of the [VimWiki](https://github.com/vimwiki/vimwiki) plugin, and makes heavy use of [fzf.vim](https://github.com/junegunn/fzf.vim). You will also need to install `ripgrep` and `ImageMagick` to make use of all of roam.vim's features. I also recommend the [markdown-preview](https://github.com/iamcco/markdown-preview.nvim) plugin to easily view your notes in HTML, rendered in real time.
 
 Install the plugins using [vim-plug](https://github.com/junegunn/vim-plug) (or whichever other plugin manager you use):
 
@@ -36,11 +43,11 @@ Install the plugins using [vim-plug](https://github.com/junegunn/vim-plug) (or w
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'vimwiki/vimwiki.vim'
-Plug `iamcco/markdown-preview.nvim`
+Plug 'iamcco/markdown-preview.nvim'
 Plug 'jeffmm/roam.vim'
 ```
 
-## Using `roam.vim`
+## Using roam.vim
 
 By default, `<Leader>ww` is used to the index of your wiki. Your index should be thought of a central hub -- a branching off point to begin building your wiki. By default, the index is located at `~/vimroam/wiki/index.md`. See `:h vimroam_list` for changing the wiki defaults.
 
@@ -72,7 +79,7 @@ Notice that the link back to the note that referenced this one -- a backlink -- 
 
 Pressing `Backspace` returns to the previous wiki page, in this case, the backlink `index.md`. A link can also be constructed from more than one word by visually selecting the words to be linked and press `Enter`. To try it, visually select `Reading list` from the index wiki and press `Enter`.
 
-Often, the best use of `roam.vim` is for unstructured thinking and recording ideas that can be organized later. To create a new wiki note at any time, use the `:RoamNewNote` command (mapped to `<leader>wn` by default). You will be prompted to enter a note title if you so choose (the default is the current date and time in the format `YYYYMMDDHHmm`), and hit `Enter` to create and edit the new note.
+Often, the best use of roam.vim is for unstructured thinking and recording ideas that can be organized later. To create a new wiki note at any time, use the `:RoamNewNote` command (mapped to `<leader>wn` by default). You will be prompted to enter a note title if you so choose (the default is the current date and time in the format `YYYYMMDDHHmm`), and hit `Enter` to create and edit the new note.
 
 You can organize the note by connecting it to another note later, either by entering a backlink or by linking to another note. You can find a list of all notes that are not currently traversable from the index wiki using the command `:RoamInbox` (mapped by default to `<leader>wi`). The inbox menu also lists defunct links.
 
@@ -95,9 +102,11 @@ You can also quickly add links to images that are saved to disk to create refere
 ### Documentation
 
 - `:help roam-commands` -- List all commands.
-- `:help roam` -- General `roam.vim` help docs.
+- `:help roam` -- General roam.vim help docs.
 
 ### Key bindings
+
+You can remap the keybindings yourself after adding the line `let g:roam_default_mappings=0` to your vimrc.
 
 - `<Leader>ww` -- Open default wiki index file.
 - `<Leader>wn` -- Create a new roam note.
@@ -107,11 +116,12 @@ You can also quickly add links to images that are saved to disk to create refere
 - `<Leader>wi` -- List unlinked notes and broken links.
 - `<Leader>wb` -- List backlinks referencing the current note.
 - `<Leader>wy` -- Yank markdown link to current note.
-- `<Leader>wD` -- Delete current note (after confirmation).
-- `<Leader>wR` -- Rename current note (after confirmation).
-- `<Enter>` -- Follow/Create markdown link.
+- `<Leader>wd` -- Delete current note (after confirmation).
+- `<Leader>wr` -- Rename current note (after confirmation).
+- `<Enter>` -- Follow/create markdown link.
 - `<Backspace>` -- Go back to parent(previous) note.
-- `[]` -- (While in insert mode) insert link to an existing note.
+- `<Enter>` -- (visual, selecting an image link) Create link to a copied image
+- `[]` -- (insert) Insert link to an existing note, returning to insert mode.
 
 Refer to the complete documentation at `:h roam-mappings` to see additional bindings.
 
