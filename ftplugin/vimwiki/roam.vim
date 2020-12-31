@@ -1,6 +1,6 @@
 " vim:tabstop=2:shiftwidth=2:expandtab:textwidth=99
 " Vimwiki filetype plugin file
-" Home: https://github.com/jeffmm/roam.vim/
+" Home: https://github.com/jeffmm/vim-roam/
 
 " Load ftplugin only once per buffer
 if exists('b:roam_ftplugin')

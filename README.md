@@ -1,8 +1,10 @@
-# roam.vim: A Vim-Powered and Roam-Inspired Wiki
+# vim-roam
+
+**A Vim-Powered and Roam-Inspired Wiki**
 
 - [Intro](#introduction)
 - [Installation](#installation)
-- [Usage](#usage)
+- [Using vim-roam](#using-vim-roam)
   - [Documentation](#documentation)
   - [Key Bindings](#key-bindings)
 - [Reporting issues](#reporting-issues)
@@ -18,16 +20,16 @@ I wanted to build a Roam-like wiki of my own using the tool with which I am most
 
 ## Installation
 
-### Requirements
+Requirements:
 
-- [vimwiki plugin](https://github.com/vimwiki/vimwiki)
-- [fzf.vim plugin](https://github.com/junegunn/fzf.vim)
+- [vimwiki](https://github.com/vimwiki/vimwiki) plugin
+- [fzf.vim](https://github.com/junegunn/fzf.vim) plugin
 - [ripgrep](https://github.com/BurntSushi/ripgrep)
 - ImageMagick (optional)
 
-roam.vim has been tested on **NeoVim >= 0.4.4**, though it will likely work on recent versions of both Vim and NeoVim.
+vim-roam has been tested on **NeoVim >= 0.4.4**, though it will likely work on recent versions of both Vim and NeoVim.
 
-If you're not using NeoVim, make sure to add the following to your vimrc, otherwise roam.vim will not work:
+If you're not using NeoVim, make sure to add the following to your vimrc, otherwise vim-roam will not work:
 
 ```vim
 set nocompatible
@@ -35,7 +37,7 @@ filetype plugin on
 syntax on
 ```
 
-This plugin is built on top of the [VimWiki](https://github.com/vimwiki/vimwiki) plugin, and makes heavy use of [fzf.vim](https://github.com/junegunn/fzf.vim). You will also need to install `ripgrep` and `ImageMagick` to make use of all of roam.vim's features. I also recommend the [markdown-preview](https://github.com/iamcco/markdown-preview.nvim) plugin to easily view your notes in HTML, rendered in real time.
+This plugin is built on top of the [VimWiki](https://github.com/vimwiki/vimwiki) plugin, and makes heavy use of [fzf.vim](https://github.com/junegunn/fzf.vim). You will also need to install `ripgrep` and `ImageMagick` to make use of all of vim-roam's features. I also recommend the [markdown-preview](https://github.com/iamcco/markdown-preview.nvim) plugin to easily view your notes in HTML, rendered in real time.
 
 Install the plugins using [vim-plug](https://github.com/junegunn/vim-plug) (or whichever other plugin manager you use):
 
@@ -44,12 +46,12 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'vimwiki/vimwiki.vim'
 Plug 'iamcco/markdown-preview.nvim'
-Plug 'jeffmm/roam.vim'
+Plug 'jeffmm/vim-roam'
 ```
 
-## Usage
+## Using vim-roam
 
-By default, `<Leader>ww` is used to the index of your wiki. Your index should be thought of a central hub -- a branching off point to begin building your wiki. By default, the index is located at `~/vimroam/wiki/index.md`. See `:h vimroam_list` for changing the wiki defaults.
+By default, `<Leader>ww` is used to the index of your wiki. Your index should be thought of a central hub---a branching-off point to begin building your wiki. By default, the index is located at `~/.vim/roam/wiki/index.md`. See `:h roam_list` for changing the wiki defaults.
 
 You can begin building your wiki the following example:
 
@@ -61,7 +63,7 @@ You can begin building your wiki the following example:
 - Reading list
 ```
 
-Placing the cursor on `Meta` and pressing `Enter` creates a link -- `Meta` becomes `[Meta](meta.md)`, a markdown link. Pressing `Enter` on a markdown link opens the file `meta.md`, creating it if necessary. The file will look like the following:
+Placing the cursor on `Meta` and pressing `Enter` creates a link---`Meta` becomes `[Meta](meta.md)`, a markdown link. Pressing `Enter` on a markdown link opens the file `meta.md`, creating it if necessary. The file will look like the following:
 
 ```markdown
 ---
@@ -73,13 +75,13 @@ tags:
 ## Backlink: [index](index.md)
 ```
 
-Notice that the link back to the note that referenced this one -- a backlink -- is automatically generated. In fact, all references of the current page can be viewed and their files previewed using the command `:RoamBacklinks` (mapped to `<leader>wb` by default).
+Notice that the link back to the note that referenced this one---a backlink---is automatically generated. In fact, all references of the current page can be viewed and their files previewed using the command `:RoamBacklinks` (mapped to `<leader>wb` by default).
 
 ![RoamBacklinks example](images/RoamBacklinks.jpg)
 
 Pressing `Backspace` returns to the previous wiki page, in this case, the backlink `index.md`. A link can also be constructed from more than one word by visually selecting the words to be linked and press `Enter`. To try it, visually select `Reading list` from the index wiki and press `Enter`.
 
-Often, the best use of roam.vim is for unstructured thinking and recording ideas that can be organized later. To create a new wiki note at any time, use the `:RoamNewNote` command (mapped to `<leader>wn` by default). You will be prompted to enter a note title if you so choose (the default is the current date and time in the format `YYYYMMDDHHmm`), and hit `Enter` to create and edit the new note.
+Often, the best use of vim-roam is for unstructured thinking and recording ideas that can be organized later. To create a new wiki note at any time, use the `:RoamNewNote` command (mapped to `<leader>wn` by default). You will be prompted to enter a note title if you so choose (the default is the current date and time in the format `YYYYMMDDHHmm`), and hit `Enter` to create and edit the new note.
 
 You can organize the note by connecting it to another note later, either by entering a backlink or by linking to another note. You can find a list of all notes that are not currently traversable from the index wiki using the command `:RoamInbox` (mapped by default to `<leader>wi`). The inbox menu also lists defunct links.
 
@@ -102,7 +104,7 @@ You can also quickly add links to images that are saved to disk to create refere
 ### Documentation
 
 - `:help roam-commands` -- List all commands.
-- `:help roam` -- General roam.vim help docs.
+- `:help roam` -- General vim-roam help docs.
 
 ### Key bindings
 
@@ -127,7 +129,7 @@ Refer to the complete documentation at `:h roam-mappings` to see additional bind
 
 ## Reporting issues
 
-If you need to report any bugs, use [GitHub issues](https://github.com/jeffmm/roam.vim/issues). Feature requests will also be considered, assuming they are within the scope of the plugin.
+If you need to report any bugs, use [GitHub issues](https://github.com/jeffmm/vim-roam/issues). Feature requests will also be considered, assuming they are within the scope of the plugin.
 
 ## License
 
