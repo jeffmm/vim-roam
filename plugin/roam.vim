@@ -1,6 +1,6 @@
 " vim:tabstop=2:shiftwidth=2:expandtab:textwidth=99
 " Vim-Roam plugin file
-" Home: https://github.com/jeffmm/vim-roam/
+" Home: https://github.com/jeffmm/roam.vim/
 
 if exists("g:loaded_roam") || &compatible
   finish
