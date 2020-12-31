@@ -2,7 +2,7 @@
 
 - [Intro](#introduction)
 - [Installation](#installation)
-- [Using roam.vim](#using-roam.vim)
+- [Usage](#usage)
   - [Documentation](#documentation)
   - [Key Bindings](#key-bindings)
 - [Reporting issues](#reporting-issues)
@@ -47,7 +47,7 @@ Plug 'iamcco/markdown-preview.nvim'
 Plug 'jeffmm/roam.vim'
 ```
 
-## Using roam.vim
+## Usage
 
 By default, `<Leader>ww` is used to the index of your wiki. Your index should be thought of a central hub -- a branching off point to begin building your wiki. By default, the index is located at `~/vimroam/wiki/index.md`. See `:h vimroam_list` for changing the wiki defaults.
 
