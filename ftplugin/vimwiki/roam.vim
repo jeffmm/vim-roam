@@ -30,6 +30,9 @@ nnoremap <silent><script><buffer> <Plug>RoamBacklinks :RoamBacklinks<CR>
 command! -buffer RoamYankName call roam#vimwiki#wiki_yank_name()
 nnoremap <silent><script><buffer> <Plug>RoamYankName :RoamYankName<CR>
 
+command! -buffer RoamNormalizeLinkVisual call roam#vimwiki#normalize_link_visual()
+vnoremap <silent><script><buffer> <Plug>RoamNormalizeLinkVisual
+      \ :<C-U>RoamNormalizeLinkVisual<CR>
 function! s:map_roam_key(mode, keymap, command)
     execute a:mode . 'map <buffer> ' . a:keymap . ' ' . a:command
 endfunction
@@ -40,6 +43,8 @@ if g:roam_default_mappings == 1
   call s:map_roam_key('n', s:map_prefix.'y', '<Plug>RoamYankName')
   call s:map_roam_key('n', s:map_prefix.'b', '<Plug>RoamBacklinks')
   call s:map_roam_key('i', '[]', '<Plug>RoamInsertLink')
+  call s:map_roam_key('v', '<CR>', '<Plug>RoamNormalizeLinkVisual')
+
 endif
 
 " Function for overriding the default vimwiki link handler:

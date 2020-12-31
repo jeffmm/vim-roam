@@ -345,8 +345,7 @@ endfunction
 function! roam#vimwiki#create(...)
   " name of the new note
   let format = roam#vimwiki#new_roam_name(a:1)
-  let date_format = g:roam_date_format
-  let date = strftime(date_format)
+  let date = strftime(g:roam_date_format)
   let s:roam_date = date " save roam date
   " detect if the wiki file exists
   let wiki_not_exists = s:wiki_file_not_exists(format)
@@ -494,7 +493,56 @@ function! roam#vimwiki#roam_new_note()
     else
       call vimwiki#base#goto_index(0)
     endif
-    let title = input("New note name: ", strftime("%Y%m%d%H%M"))
+    let title = input("New note name: ", strftime(g:roam_date_format))
+    let title = roam#vimwiki#get_title(title)
     call roam#vimwiki#roam_new(title)
+endfunction
+
+function! s:convert_to_image_link(url)
+    let text = trim(a:url)
+    if empty(glob(expand(text)))
+        return
+    endif
+    let extension = fnamemodify(text, ":e")
+    let name = fnamemodify(text, ":t:r")
+    if extension !=? "png" && extension[:2] !=? "tif" && extension !=? "bmp" && extension !=? "jpg" && extension !=? "jpeg"
+        return
+    endif
+    let directory = expand("%:p:h") . "/images/"
+    if empty(glob(directory))
+        silent! execute "!mkdir " . directory
+    endif
+    let name = substitute(name, " ", "_", "g")
+    let output = directory . name . ".jpg"
+    if extension !=? "png" && extension[:2] !=? "tif" && extension !=? "bmp"
+        silent! execute "!convert " . text . " " . output
+    else
+        silent! execute "!cp " . text . " " . output
+    endif
+    " Reduce file size if ImageMagick is installed
+    if executable("mogrify")
+        let width = system("identify -format '%w' " . output)
+        silent! execute '!mogrify -filter Triangle -define filter:support=2 
+                    \ -thumbnail ' . float2nr(round(width/2))
+                    \ . ' -unsharp 0.25x0.25+8.3+0.065
+                    \ -dither None -posterize 136 -quality 82 -define
+                    \ jpeg:fancy-upsampling=off -interlace none 
+                    \ -colorspace sRGB ' . output
+    endif
+    execute ":'<,'>s#" . fnameescape(text) . "#![" . name . "](images/" . name . ".jpg)#"
+endfunction
+
+
+" Normalize link in visual mode Enter keypress
+function! roam#vimwiki#normalize_link_visual() abort
+  " Get selection content (this isn't a builtin, unfortunately)
+  let visual_selection = vimwiki#u#get_selection()
+  let extension = fnamemodify(trim(visual_selection), ":e")
+  if extension ==? "png" || extension[:2] ==? "tif" || extension ==? "bmp" || extension ==? "jpg" || extension ==? "jpeg"
+    call s:convert_to_image_link(visual_selection)
+    return
+  else
+    call vimwiki#base#normalize_link(1)
+  endif
 endfunction
 
