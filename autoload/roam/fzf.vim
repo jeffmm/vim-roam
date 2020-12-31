@@ -42,7 +42,7 @@ function! s:insert_link_file(lines) abort
 endfunction
 
 function! roam#fzf#insert_link(fullscreen) abort
-      call fzf#vim#files(vimroam#vars#get_wikilocal('path'), 
+      call fzf#vim#files(vimwiki#vars#get_wikilocal('path'), 
       \ {
               \ 'sink*': function('s:insert_link_file'),
               \ 'source': join([
@@ -53,7 +53,7 @@ function! roam#fzf#insert_link(fullscreen) abort
                    \ '--line-number',
                    \ '--color never',
                    \ '--no-messages',
-                   \ '*'.vimroam#vars#get_wikilocal('ext'),
+                   \ '*'.vimwiki#vars#get_wikilocal('ext'),
                    \ ]),
               \ 'down': '40%',
               \ 'options': [
