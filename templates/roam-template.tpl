@@ -1,8 +1,0 @@
-
-
-
-
-
-Backlink: %backlink
-----
-%footer

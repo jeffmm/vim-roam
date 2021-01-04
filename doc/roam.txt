@@ -1,0 +1,376 @@
+*roam.txt*    A VimWiki extension inspired by Roam Research
+
+ Vim-Roam
+
+==============================================================================
+CONTENTS                                                           *vim-roam*
+
+0. Intro                                     |Vim-Roam-Intro|
+1. Installation                              |Vim-Roam-Install|
+2. Configuration                             |Vim-Roam-Configure|
+3. Commands                                  |Vim-Roam-Commands|
+   `RoamNew`                                |Vim-Roam_RoamNew|
+   `RoamOpen`                               |Vim-Roam_RoamOpen|
+   `RoamInsertNote`                         |Vim-Roam_RoamInsertNote|
+   `RoamCapture`                            |Vim-Roam_RoamCapture|
+   `RoamSetActiveWiki`                      |Vim-Roam_RoamSetActiveWiki|
+   `RoamBackLinks`                          |Vim-Roam_RoamBackLinks|
+   `RoamInbox`                              |Vim-Roam_RoamInbox|
+   `RoamGenerateLinks`                      |Vim-Roam_RoamGenerateLinks|
+   `RoamGenerateTags`                       |Vim-Roam_RoamGenerateTags|
+   `RoamSearch`                             |Vim-Roam_RoamSearch|
+   `RoamYankName`                           |Vim-Roam_RoamYankName|
+4. Mappings                                  |Vim-Roam-Mappings|
+   `z`                                        |Vim-Roam_z|
+   `[[`                                       |Vim-Roam_[[|
+   `T`                                        |Vim-Roam_T|
+   `gZ`                                       |Vim-Roam_gZ|
+5. Variables                                 |Vim-Roam-Variables|
+6. Templates                                 |Vim-Roam-Templates|
+7. Related Packages                          |Vim-Roam-Related|
+8. ChangeLog                                 |Vim-Roam-ChangeLog|
+
+==============================================================================
+0. Intro                                                     *Vim-Roam-Intro*
+
+This is a Vim plugin that implements ideas of the roamkasten method of
+note taking as described at https://roamkasten.de/.  It is an add-on to
+the Vimwiki extension for Vim and supports both Vimwiki and Markdown syntaxes.
+
+Main features:
+
+- customizable filenames (date and time, title, consecutive numbering)
+- links always show titles, regardless of the actual filename
+- fulltext support using FZF for searching and hyperlinking
+- search your Roamkasten from LaTeX or Markdown documents and insert
+  selected notes to the document
+- template support 
+- automatically updated tag index
+- backlinks
+
+==============================================================================
+1. Installation                                           *Vim-Roam-Install*
+
+This extension requires an external search utility.  It uses The Silver
+Searcher by default.
+(Available at https://github.com/ggreer/the_silver_searcher/ or in your OS
+repositories).
+
+Using Vundle: >
+
+   Plugin 'vimwiki/vimwiki'
+   Plugin 'junegunn/fzf'
+   Plugin 'junegunn/fzf.vim'
+   Plugin 'michal-h21/vim-roam'
+<
+==============================================================================
+2. Configuration                                        *Vim-Roam-Configure*
+
+First of all, it is necessary to configure Vimwiki, as Vim-Roam builds
+on top of it.  Vim-Roam can be used out of the box without further
+configuration if you have only one wiki.  However, you will probably want to
+customize your Vim-Roam configuration and will have to if you have more than
+one wiki. 
+>
+   " Settings for Vimwiki
+   let g:vimwiki_list = \
+     [{'path':'~/scratchbox/vimwiki/markdown/','ext':'.md',\
+     'syntax':'markdown'}, {"path":"~/scratchbox/vimwiki/wiki/"}]
+<
+You may want to set some of the following options in your .vimrc file to make
+Vim-Roam work to your liking:
+
+- |g:roam_options|
+- |g:roam_format|
+- |g:roam_default_mappings|
+- |g:roam_fzf_command|
+- |g:roam_fzf_options|
+- |g:roam_backlinks_title|
+
+You can also supply a custom template for creating new roams. See
+|Vim-Roam-Templates|.
+
+==============================================================================
+3. Commands                                              *Vim-Roam-Commands*
+
+Vim-Roam implements the following commands on top of Vimwiki.
+
+                                                       *Vim-Roam_RoamNew*
+                                                                  *RoamNew*
+- `:RoamNew` command – it will create a new wiki file named as
+ %y%m%d-%H%M.wiki (it is possible to change the file name format using
+ |g:roam_format| variable). The file uses basic template in the form 
+
+>
+   %title Note title
+   %date current date
+<
+where title is the first parameter to `:RoamNew`.
+
+If you use the default mappings provided by `Vim-Roam`, it is possible to
+call this command by pressing the `z` character in visual mode. The selected
+text will be used as title of the new note.
+
+                                                       *Vim-Roam_RoamOpen*
+                                                                  *RoamOpen*
+- `:RoamOpen` command - perform fulltext search using FZF. It keeps the
+  history of opened pages.
+
+                                                 *Vim-Roam_RoamInsertNote*
+                                                            *RoamInsertNote*
+- `:RoamInsertNote` - select notes using FZF and insert them in the current
+  document.  Multiple notes can be selected using the `<TAB>` key.  They are
+  automatically converted to the document syntax format using Pandoc.
+
+                                                   *Vim-Roam_RoamCapture*
+                                                              *RoamCapture*
+- `:RoamCapture` command – turn the content of the current file into a
+   roam.  This is a global command available throughout Vim. WARNING:
+   this command is destructive. Use only on temporary files.  You can run
+   this from within vim while viewing a file you want to turn into a roam
+   or from the command line: >
+
+       vim -c RoamCapture filename
+<
+    you can specify wiki numbner (starting from 0) if you have multiple
+    wikis. It opens first declared wiki by default:
+
+>
+      vim -c "RoamCapture 1" filename
+<
+                                             *Vim-Roam_RoamSetActiveWiki*
+                                                        *RoamSetActiveWiki*
+
+- `:RoamSetActiveWiki`command - select default wiki for commands that can
+  operate when Vimwiki is not active, like `:RoamOpen` or
+  `:RoamInsertNote`.
+
+
+                                                 *Vim-Roam_RoamBackLinks*
+                                                            *RoamBackLinks*
+- `:RoamBackLinks` command – insert list of notes that link to the current
+   note.
+
+                                                     *Vim-Roam_RoamInbox*
+                                                                *RoamInbox*
+- `:RoamInbox` command – insert list of notes that no other note links to.
+
+                                             *Vim-Roam_RoamGenerateLinks*
+                                                        *RoamGenerateLinks*
+- `:RoamGenerateLinks` command – insert list of all wiki pages in the
+   current page. It needs updated tags database. The tags database can be
+   updated  using the `:VimwikiRebuildTags!` command.
+
+                                              *Vim-Roam_RoamGenerateTags*
+                                                         *RoamGenerateTags*
+- `:RoamGenerateTags` command – insert list of tags and pages that used
+   these tags in the current page. It needs updated tags database. The tags
+   database can be updated  using the `:VimwikiRebuildTags!` command. It only
+   supports the Vimwiki style tags in the form :tag1:tag2. These work
+   even in the Markdown mode.
+
+                                                   *Vim-Roam_RoamSearch*
+                                                              *RoamSearch*
+- `:RoamSearch` command – search the content of your roamkasten and
+   insert a link to the selected roam in your current note.  Mapped to
+   `[[` in insert mode.
+
+                                                 *Vim-Roam_RoamYankName*
+                                                            *RoamYankName*
+- `:RoamYankName` – copy the current roam file name and title to the
+  unnamed register as a formatted link.  Mapped to `T` in normal mode.
+
+Useful Vimwiki commands ~
+
+- |:VimwikiBacklinks| - display files that link to the current page
+- |:VimwikiCheckLinks|- display files that no other file links to
+
+==============================================================================
+4. Mappings                                              *Vim-Roam-Mappings*
+
+`Vim-roam` sets some mappings by default. You can disable the default
+mappings and define your own. See |g:roam_default_mappings| for more
+details.
+
+                                                               *Vim-Roam_z*
+- `z` command in visual mode – create a new wiki file using selected text for
+   the note title
+
+                                                              *Vim-Roam_[[*
+- [[ command in insert mode – create a link to a note. It uses FZF for the
+   note searching.
+
+                                                               *Vim-Roam_T*
+- T command in normal mode – yank the current note filename and title as a
+   Vimwiki link
+
+                                                              *Vim-Roam_gZ*
+- gZ command in normal mode – replace file path under cursor with Wiki link
+
+It may be convenient to map `RoamNew` to prompt for a note title also: 
+>
+   nnoremap <leader>zn :RoamNew<space>
+<
+==============================================================================
+5. Variables                                             *Vim-Roam-Variables*
+
+                                                           *g:roam_template_path*
+The g:roam_template_path variable corresponds a template used to generate a
+new roam note.
+>
+    let g:roam_template_path = "~/roam.tpl"
+<
+The `template` itself is discussed in |Vim-Roam-Templates|.
+
+                                                            *g:roam_front_matter*
+The g:roam_front_matter variable contains additional fields to be inserted in
+the header of a new roam note. It should be list of lists of pairs, where the
+first item contains a key and the second contains a value. The second value
+can be a funcref (`:help funcref`). The function will be executed each time
+the `front_matter` is to make a new roam note.
+
+You can disable front matter completely by setting `disable_front_matter`
+option to a nonzero value.
+
+
+                                                            *g:roam_title_format*
+By default, when a roam note is created from a link, the the `front_matter`
+metadata includes a `title` field that is automatically filled. The format of
+the title can use the following formatting strings:
+
+- Any formatting string recognized by `strftime()` (e.g. %Y, %m, etc)
+- %title -- insert sanitized title
+- %random -- random alphanumeric characters. Their number can be configured
+    using `g:roam_random_chars` option (12 is used by default).
+- %date -- the current date using the format in |g:roam_date_format|
+
+To use filename based on current time and note title, you can use the
+following format: 
+>
+   let g:roam_new_title_format = "%Y%m%d-%title"
+<
+If the generated file name exists, a letter suffix is added to the filename
+(`a` for the first copy, `aa` for the 27th copy, etc).
+
+Vim-Roam uses the `link_space_char` setting defined by vimwiki to sanitize the
+filename (see `:h links_space_char`).
+
+You can use Vimwiki variable `g:vimwiki_markdown_link_ext` to require
+inclusion of the `.md` extension in links created by Vim-Roam (e.g. when
+filling in the `%backlink` formatter in `roam.tpl`):
+>
+   let g:vimwiki_markdown_link_ext = 1
+<
+                                                            *g:roam_new_title_format*
+By default, when a new roam is created using |Vim-Roam_RoamNewNote| the
+default file name is the current date in the format YYYYMMDDHHMM. This format
+can be changed using the g:roam_new_title_format variable. All title formats
+available in |g:roam_title_format| are available.
+
+                                                     *g:roam_link_format*
+Custom text used when vim-roam generates a link (e.g. when formatting a link
+in the place of `%backlink` in `roam.tpl` or when yanking a link to the
+current file using |Vim-Roam_RoamYankName|). Respects the `%title` and `%link`
+formatters, which are the title metadata in the current roam (filename if
+empty) and the extension-less filename of the current roam, respectively.
+
+For example:
+>
+    let g:roam_link_format = "[%title](%link.md)"
+<
+
+                                                     *g:roam_date_format*
+Date format used for date metadata in front matter for a new roam. It will
+need to be supported by the `strftime()` function.
+
+For example:
+>
+    let g:roam_date_format = "%Y%m%d"
+<
+                                                  *g:roam_default_mappings*
+The default mappings used by vim-roam can be changed by setting the
+g:roam_default_mappings variable to 0 and then specifying your own keymaps.
+
+For example:
+ >
+   let g:roam_default_mappings = 0
+   " This is the same as the default configuration
+   augroup filetype_vimwiki
+     autocmd!
+     autocmd FileType vimwiki inoremap <silent> [] <Plug>RoamInsertLink
+     autocmd FileType vimwiki nnoremap wy <Plug>RoamYankName
+     autocmd FileType vimwiki xnoremap wb <Plug>RoamBacklinks
+     autocmd FileType vimwiki nnoremap ws <Plug>RoamSearchText
+     " etc
+   augroup END
+<
+                                                       *g:roam_fzf_command*
+Vim-Roam uses The Silver Searcher (ag) by default when searching through
+your files.  The g:roam_fzf_command can be used to override the default
+setting. >
+
+   " command used for VimwikiSearch
+   " default value is "ag". To use other command, like ripgrep, pass the
+   " command line and options:
+   let g:roam_fzf_command = "rg --column --line-number --ignore-case \
+     --no-heading --color=always "
+
+<
+
+                                                       *g:roam_link_format*
+Format used for generated links. You can change this variable if you are not
+satisfied with the default format.
+>
+   let g:roam_link_format="[%title](%link)"
+<
+
+                                                     *g:roam_random_chars*
+
+Number of characters used in `%random` roam name format.
+
+
+==============================================================================
+6. Templates                                             *Vim-Roam-Templates*
+
+It is possible to populate new notes with basic structure using templates.
+Template can be declared using the g:roam_options variable: >
+
+   let g:roam_options = [{"template" :  "~/path/to/mytemplate.tpl"}]
+<
+Sample template: >
+
+   = %title =
+
+   Backlink: %backlink
+   ----
+   %footer
+<
+Variables that start with the % will be expanded. Supported variables:
+
+- %title - title of the new note
+- %backlink - back link to the parent note
+- %date - date and time of the new note. Format is based on
+  `g:roam_date_format` variable.
+- %footer - text from the parent note footer. Footer is separated from  the
+ main text by horizontal rule  (---). It can contain some information
+ shared by notes. For example notes about publication can share citation of
+ that publication.
+
+All variables set in the `front_matter` option are available as well.
+
+==============================================================================
+7. Related packages                                        *Vim-Roam-Related*
+
+- [Vim-Zettel](https://github.com/michal-h21/vim-zettel): A Zettelkasten Addon
+  to VimWiki
+
+
+==============================================================================
+8.  Changelog                                            *Vim-Roam-ChangeLog*
+
+This plugin is in alpha. Expect occasional breaking changes,
+backwards-incompatible updates, and other shenanigans.
+
+20201230: This plugin was made public.
+
+vim:tw=78:ts=8:ft=help

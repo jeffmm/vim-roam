@@ -8,14 +8,6 @@ if exists('b:roam_ftplugin')
 endif
 let b:roam_ftplugin = 1
 
-" Create function for inserting a link to another note
-" default format of a new roam note name, from vimwiki link
-" if exists("g:roam_title_format")
-  " let s:roam_title_format = g:roam_title_format
-" else
-  " let s:roam_title_format = fnamemodify("%title", ":r")
-" endif
-
 command! -buffer -bang RoamInsertLink call roam#fzf#insert_link(<bang>0)
 inoremap <silent><script><buffer> <Plug>RoamInsertLink
     \ <ESC>:RoamInsertLink<CR>
@@ -37,14 +29,19 @@ function! s:map_roam_key(mode, keymap, command)
     execute a:mode . 'map <buffer> ' . a:keymap . ' ' . a:command
 endfunction
 
-" default links key mappings
+" default links key mappings (repeat global mappings from plugin/roam.vim
+" to overwrite ftplugin mappings from vimwiki
 if g:roam_default_mappings == 1
   let s:map_prefix = vimwiki#vars#get_global('map_prefix')
   call s:map_roam_key('n', s:map_prefix.'y', '<Plug>RoamYankName')
   call s:map_roam_key('n', s:map_prefix.'b', '<Plug>RoamBacklinks')
+  call s:map_roam_key('n', s:map_prefix.'n', '<Plug>RoamNewNote')
+  call s:map_roam_key('n', s:map_prefix.'s', '<Plug>RoamSearchText')
+  call s:map_roam_key('n', s:map_prefix.'t', '<Plug>RoamSearchTags')
+  call s:map_roam_key('n', s:map_prefix.'f', '<Plug>RoamSearchFiles')
+  call s:map_roam_key('n', s:map_prefix.'i', '<Plug>RoamInbox')
   call s:map_roam_key('i', '[]', '<Plug>RoamInsertLink')
   call s:map_roam_key('v', '<CR>', '<Plug>RoamNormalizeLinkVisual')
-
 endif
 
 " Function for overriding the default vimwiki link handler:
