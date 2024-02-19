@@ -38,7 +38,6 @@ g:roam_default_mappings	roam.txt	/*g:roam_default_mappings*
 g:roam_front_matter	roam.txt	/*g:roam_front_matter*
 g:roam_fzf_command	roam.txt	/*g:roam_fzf_command*
 g:roam_link_format	roam.txt	/*g:roam_link_format*
-g:roam_link_format	roam.txt	/*g:roam_link_format*
 g:roam_new_title_format	roam.txt	/*g:roam_new_title_format*
 g:roam_random_chars	roam.txt	/*g:roam_random_chars*
 g:roam_template_path	roam.txt	/*g:roam_template_path*

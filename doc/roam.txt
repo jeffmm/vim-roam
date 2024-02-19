@@ -317,13 +317,6 @@ setting. >
 
 <
 
-                                                       *g:roam_link_format*
-Format used for generated links. You can change this variable if you are not
-satisfied with the default format.
->
-   let g:roam_link_format="[%title](%link)"
-<
-
                                                      *g:roam_random_chars*
 
 Number of characters used in `%random` roam name format.
